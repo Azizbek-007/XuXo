@@ -2,19 +2,22 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hashPassword } from 'src/utils/helpers';
 import { ApiRes } from 'src/utils/payloadRes';
-import { Referals, Users } from 'src/utils/typeorm';
+import { Paymets, Referals, Users } from 'src/utils/typeorm';
 import { CreateUserDetails } from 'src/utils/types';
 import { Repository } from 'typeorm';
+import { CashOutDto } from './dto/cash-out.dto';
+import UpdateUserDto from './dto/user-update.dto';
 
 // This should be a real class/interface representing a user entity
-let ref_data_arr = []
 @Injectable()
 export class UsersService {
   public c = 0;
   constructor(
     @InjectRepository(Users) private usersRepository: Repository<Users>,
     @InjectRepository(Referals) 
-    private ReferalRepository: Repository<Referals>
+    private ReferalRepository: Repository<Referals>,
+    @InjectRepository(Paymets) 
+    private PaymetsRepository: Repository<Paymets>
   ){}
 
   async createUser(userDetails: CreateUserDetails): Promise<Users> {
@@ -58,30 +61,7 @@ export class UsersService {
 
     ApiRes('Successfuly', HttpStatus.OK, data);
   }
-  async addtion_balance (user: Users['id'], number){
-    
-    // referal data
-    let ref_data = await this.ReferalRepository.findOneBy({ customerId: user })
-    console.log(ref_data)
 
-    const ref_1 = ref_data?.referal1_id, 
-    ref_2 = ref_data?.referal2_id;
-    console.log(ref_1, ref_2)
-
-    if (!ref_1 && !ref_2) {
-      return this.c;
-    }else{
-      if (ref_1) { 
-        number --, this.c++ 
-        await this.addtion_balance(ref_1, number)    
-      }
-      if (ref_2) {
-        number --, this.c++ 
-        await this.addtion_balance(ref_2, number)
-      }
-    }
-    
-  } 
 
   async Referal(user: Users){
     const my_referal = await this.ReferalRepository.find({
@@ -141,25 +121,34 @@ export class UsersService {
     }
     ApiRes('Seccesfuly', HttpStatus.OK, OneUserRef);
   }
-
-  async TreeAdditon (user: Users) {
-    let profile = await this.usersRepository.findOneBy({ id: user.id });
-    let new_tree: any
-    if (profile.tree != null) {
-      let check_id = [...profile.tree].find((e) => e == 1) || null;
-      console.log(check_id)
-      if (check_id != null) {
-        ApiRes("Exist", HttpStatus.CONFLICT);
+  async ProfileUpdate (user: Users, dto: UpdateUserDto) {
+    await this.usersRepository.update(user['id'], dto);
+  }
+  async cashOut (user: Users, dto: CashOutDto) {
+    const find_user = await this.usersRepository.findOneBy({ id: user['id'] }); 
+    if (find_user['card_number'] && find_user['expiration_date']) {
+      if (find_user['balance'] >= dto['amoute']){
+        const new_paymet_trans = this.PaymetsRepository.create({
+          customer: find_user,
+          amoute: dto['amoute']
+        });
+        const data = await new_paymet_trans.save();
+        await this.usersRepository.update(find_user['id'], {
+          balance: find_user['balance'] - dto['amoute']
+        });
+        ApiRes('Craeted order for money withdrawal', HttpStatus.OK, data);
+      }else{
+        ApiRes('You don\'t have enough funds to make a withdrawal', HttpStatus.BAD_REQUEST);
       }
-      new_tree = [ ...profile.tree, 1 ];
     }else{
-      new_tree = [ 1 ];
+      ApiRes('Not Found card number and expiration date', HttpStatus.NOT_FOUND);
     }
-    await this.usersRepository.update(profile.id, { 
-      tree: new_tree
-    });
+  }
 
-    ApiRes("Successfuly", HttpStatus.OK);
+  async CashOutOrders(user: Users) {
+    const MyOrders = await this.PaymetsRepository.findBy({ customerId: user['id'] });
+    if(MyOrders.length == 0) ApiRes("Not found orders", HttpStatus.NOT_FOUND);
+    ApiRes('Found Orders', HttpStatus.OK, MyOrders);
   }
 
 }

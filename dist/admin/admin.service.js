@@ -20,9 +20,10 @@ const typeorm_2 = require("../utils/typeorm");
 const types_1 = require("../utils/types");
 const typeorm_3 = require("typeorm");
 let AdminService = class AdminService {
-    constructor(ReferalRepository, usersRepository) {
+    constructor(ReferalRepository, usersRepository, PaymetsRepository) {
         this.ReferalRepository = ReferalRepository;
         this.usersRepository = usersRepository;
+        this.PaymetsRepository = PaymetsRepository;
         this.c = 0;
     }
     async recursiv_binary_count(user, number) {
@@ -96,47 +97,81 @@ let AdminService = class AdminService {
             (0, payloadRes_1.ApiRes)('Limited', common_1.HttpStatus.BAD_REQUEST);
         }
     }
-    async findAll() {
-        return await this.ReferalRepository.find({
-            relations: {
-                customer: true,
-                referal_1: true,
-                referal_2: true
-            },
-            select: {
-                customer: {
-                    id: true,
-                    first_name: true,
-                    last_name: true
-                },
-                referal_1: {
-                    id: true,
-                    first_name: true,
-                    last_name: true
-                },
-                referal_2: {
-                    id: true,
-                    first_name: true,
-                    last_name: true
-                }
-            }
+    async findAll(query) {
+        console.log(query);
+        const take = query.take || 10;
+        const skip = query.page || 0;
+        const isActive = query.IsActive;
+        const [result, total] = await this.usersRepository.findAndCount({
+            where: { isActive },
+            select: [
+                'id',
+                'first_name',
+                'last_name',
+                'balance',
+                'card_number',
+                'expiration_date',
+                'passport_number',
+                'phone_number',
+                'pinfl',
+                'role',
+                'status',
+                'isActive',
+                'created_at'
+            ],
+            order: { id: "DESC" },
+            take: take,
+            skip: skip
         });
+        (0, payloadRes_1.ApiRes)('Found', common_1.HttpStatus.OK, { data: result, count: total });
     }
-    findOne(id) {
-        return `This action returns a #${id} admin`;
+    async IsActiveProtcess(query) {
+        const { id, active } = query;
+        if (+active == 0 || +active == 1) {
+            const user = await this.usersRepository.findOneBy({ id });
+            if (!user)
+                (0, payloadRes_1.ApiRes)('Not Found User', common_1.HttpStatus.NOT_FOUND);
+            await this.usersRepository.update(user.id, {
+                isActive: active
+            });
+            (0, payloadRes_1.ApiRes)('Successfuly updated', common_1.HttpStatus.OK);
+        }
+        else {
+            (0, payloadRes_1.ApiRes)('enum values: 1, 0', common_1.HttpStatus.BAD_REQUEST);
+        }
     }
-    update(id, updateAdminDto) {
-        return `This action updates a #${id} admin`;
+    async PaymetOrder(query) {
+        const take = query.take || 10;
+        const skip = query.page || 0;
+        const [result, total] = await this.PaymetsRepository.findAndCount({
+            relations: ['customer'],
+            where: { customerId: query.customer_id, status: query.status },
+            take,
+            skip
+        });
+        if (total == 0)
+            (0, payloadRes_1.ApiRes)('Orders not found', common_1.HttpStatus.NOT_FOUND);
+        (0, payloadRes_1.ApiRes)('Found', common_1.HttpStatus.OK, { data: result, count: total });
     }
-    remove(id) {
-        return `This action removes a #${id} admin`;
+    async SetPaymetStatus(dto) {
+        const customer_ = await this.usersRepository.findOneBy({ id: dto['customer'] });
+        const order_ = await this.PaymetsRepository.findOneBy({ id: dto['id'] });
+        if (!customer_ || !order_) {
+            (0, payloadRes_1.ApiRes)('Customer or Order Not Found', common_1.HttpStatus.NOT_FOUND);
+        }
+        await this.PaymetsRepository.update(order_.id, {
+            status: dto['status']
+        });
+        (0, payloadRes_1.ApiRes)('Successfuly', common_1.HttpStatus.OK);
     }
 };
 AdminService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(typeorm_2.Referals)),
     __param(1, (0, typeorm_1.InjectRepository)(typeorm_2.Users)),
+    __param(2, (0, typeorm_1.InjectRepository)(typeorm_2.Paymets)),
     __metadata("design:paramtypes", [typeorm_3.Repository,
+        typeorm_3.Repository,
         typeorm_3.Repository])
 ], AdminService);
 exports.AdminService = AdminService;

@@ -2,20 +2,25 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersService } from 'src/users/users.service';
 import { ApiRes } from 'src/utils/payloadRes';
-import { Referals, Users } from 'src/utils/typeorm';
-import { UserStatus } from 'src/utils/types';
+import { Paymets, Referals, Users } from 'src/utils/typeorm';
+import { isActive, PaymetRole, UserStatus } from 'src/utils/types';
 import { Repository } from 'typeorm';
 import { CreateReferalDto } from './dto/create-referal.dto';
+import { isActiveDto, QueryDto } from './dto/query.dto';
+import PaymetStatusDto from './dto/setPaymetStatus.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 
 @Injectable()
 export class AdminService {
   public c=0;
+
   constructor(
     @InjectRepository(Referals) 
     private ReferalRepository: Repository<Referals>,
     @InjectRepository(Users) 
     private usersRepository: Repository<Users>,
+    @InjectRepository(Paymets) 
+    private PaymetsRepository: Repository<Paymets>
   ){}
 
 
@@ -103,42 +108,78 @@ export class AdminService {
     }  
   } 
  
-  async findAll() {
-    return await this.ReferalRepository.find({
-      relations: {
-        customer: true,
-        referal_1: true,
-        referal_2: true
-      },
-      select: {
-        customer: {
-          id: true, 
-          first_name: true,
-          last_name: true
-        },
-        referal_1: {
-          id: true, 
-          first_name: true,
-          last_name: true
-        },
-        referal_2: {
-          id: true, 
-          first_name: true,
-          last_name: true
+  async findAll(query: QueryDto) {
+    console.log(query)
+    const take = query.take || 10;
+    const skip = query.page || 0;
+    const isActive = query.IsActive;
+    const [result, total] = await this.usersRepository.findAndCount(
+        {
+            where: { isActive }, 
+            select: [
+              'id', 
+              'first_name', 
+              'last_name', 
+              'balance', 
+              'card_number', 
+              'expiration_date', 
+              'passport_number', 
+              'phone_number',
+              'pinfl',
+              'role',
+              'status',
+              'isActive',
+              'created_at'
+            ],
+            order: { id: "DESC" },
+            take: take,
+            skip: skip
         }
-      }
-     })
+    );
+
+    ApiRes('Found', HttpStatus.OK, {data: result, count: total})
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} admin`;
+  async IsActiveProtcess (query: isActiveDto) {
+    const { id, active } = query;
+
+    if (+active == 0 || +active == 1){
+      const user = await this.usersRepository.findOneBy({ id });
+      if(!user) ApiRes('Not Found User', HttpStatus.NOT_FOUND);
+  
+      await this.usersRepository.update(user.id, {
+        isActive: active
+      });
+      ApiRes('Successfuly updated', HttpStatus.OK);
+    }else {
+      ApiRes('enum values: 1, 0', HttpStatus.BAD_REQUEST);
+    }
   }
 
-  update(id: number, updateAdminDto: UpdateAdminDto) {
-    return `This action updates a #${id} admin`;
+  async PaymetOrder(query: { take: number, page: number, customer_id: number, status: PaymetRole}) {
+    const take = query.take || 10;
+    const skip = query.page || 0;
+    const [result, total] = await this.PaymetsRepository.findAndCount(
+        {
+          relations: ['customer'],
+          where: { customerId: query.customer_id, status: query.status },
+          take,
+          skip
+        }
+    );
+    if (total == 0) ApiRes('Orders not found', HttpStatus.NOT_FOUND);
+    ApiRes('Found', HttpStatus.OK, {data: result, count: total});
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} admin`;
+  async SetPaymetStatus(dto: PaymetStatusDto) {
+    const customer_ = await this.usersRepository.findOneBy({ id: dto['customer'] });
+    const order_ = await this.PaymetsRepository.findOneBy({ id: dto['id'] });
+    if(!customer_ || !order_){
+      ApiRes('Customer or Order Not Found', HttpStatus.NOT_FOUND);
+    }
+    await this.PaymetsRepository.update(order_.id, {
+      status: dto['status']
+    });
+    ApiRes('Successfuly', HttpStatus.OK);
   }
 }

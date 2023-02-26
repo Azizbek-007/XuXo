@@ -19,11 +19,11 @@ const helpers_1 = require("../utils/helpers");
 const payloadRes_1 = require("../utils/payloadRes");
 const typeorm_2 = require("../utils/typeorm");
 const typeorm_3 = require("typeorm");
-let ref_data_arr = [];
 let UsersService = class UsersService {
-    constructor(usersRepository, ReferalRepository) {
+    constructor(usersRepository, ReferalRepository, PaymetsRepository) {
         this.usersRepository = usersRepository;
         this.ReferalRepository = ReferalRepository;
+        this.PaymetsRepository = PaymetsRepository;
         this.c = 0;
     }
     async createUser(userDetails) {
@@ -62,25 +62,6 @@ let UsersService = class UsersService {
             ]
         });
         (0, payloadRes_1.ApiRes)('Successfuly', common_1.HttpStatus.OK, data);
-    }
-    async addtion_balance(user, number) {
-        let ref_data = await this.ReferalRepository.findOneBy({ customerId: user });
-        console.log(ref_data);
-        const ref_1 = ref_data === null || ref_data === void 0 ? void 0 : ref_data.referal1_id, ref_2 = ref_data === null || ref_data === void 0 ? void 0 : ref_data.referal2_id;
-        console.log(ref_1, ref_2);
-        if (!ref_1 && !ref_2) {
-            return this.c;
-        }
-        else {
-            if (ref_1) {
-                number--, this.c++;
-                await this.addtion_balance(ref_1, number);
-            }
-            if (ref_2) {
-                number--, this.c++;
-                await this.addtion_balance(ref_2, number);
-            }
-        }
     }
     async Referal(user) {
         const my_referal = await this.ReferalRepository.find({
@@ -138,31 +119,45 @@ let UsersService = class UsersService {
         }
         (0, payloadRes_1.ApiRes)('Seccesfuly', common_1.HttpStatus.OK, OneUserRef);
     }
-    async TreeAdditon(user) {
-        let profile = await this.usersRepository.findOneBy({ id: user.id });
-        let new_tree;
-        if (profile.tree != null) {
-            let check_id = [...profile.tree].find((e) => e == 1) || null;
-            console.log(check_id);
-            if (check_id != null) {
-                (0, payloadRes_1.ApiRes)("Exist", common_1.HttpStatus.CONFLICT);
+    async ProfileUpdate(user, dto) {
+        await this.usersRepository.update(user['id'], dto);
+    }
+    async cashOut(user, dto) {
+        const find_user = await this.usersRepository.findOneBy({ id: user['id'] });
+        if (find_user['card_number'] && find_user['expiration_date']) {
+            if (find_user['balance'] >= dto['amoute']) {
+                const new_paymet_trans = this.PaymetsRepository.create({
+                    customer: find_user,
+                    amoute: dto['amoute']
+                });
+                const data = await new_paymet_trans.save();
+                await this.usersRepository.update(find_user['id'], {
+                    balance: find_user['balance'] - dto['amoute']
+                });
+                (0, payloadRes_1.ApiRes)('Craeted order for money withdrawal', common_1.HttpStatus.OK, data);
             }
-            new_tree = [...profile.tree, 1];
+            else {
+                (0, payloadRes_1.ApiRes)('You don\'t have enough funds to make a withdrawal', common_1.HttpStatus.BAD_REQUEST);
+            }
         }
         else {
-            new_tree = [1];
+            (0, payloadRes_1.ApiRes)('Not Found card number and expiration date', common_1.HttpStatus.NOT_FOUND);
         }
-        await this.usersRepository.update(profile.id, {
-            tree: new_tree
-        });
-        (0, payloadRes_1.ApiRes)("Successfuly", common_1.HttpStatus.OK);
+    }
+    async CashOutOrders(user) {
+        const MyOrders = await this.PaymetsRepository.findBy({ customerId: user['id'] });
+        if (MyOrders.length == 0)
+            (0, payloadRes_1.ApiRes)("Not found orders", common_1.HttpStatus.NOT_FOUND);
+        (0, payloadRes_1.ApiRes)('Found Orders', common_1.HttpStatus.OK, MyOrders);
     }
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(typeorm_2.Users)),
     __param(1, (0, typeorm_1.InjectRepository)(typeorm_2.Referals)),
+    __param(2, (0, typeorm_1.InjectRepository)(typeorm_2.Paymets)),
     __metadata("design:paramtypes", [typeorm_3.Repository,
+        typeorm_3.Repository,
         typeorm_3.Repository])
 ], UsersService);
 exports.UsersService = UsersService;

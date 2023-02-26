@@ -16,30 +16,63 @@ exports.AdminController = void 0;
 const common_1 = require("@nestjs/common");
 const admin_service_1 = require("./admin.service");
 const create_referal_dto_1 = require("./dto/create-referal.dto");
+const query_dto_1 = require("./dto/query.dto");
+const setPaymetStatus_dto_1 = require("./dto/setPaymetStatus.dto");
 let AdminController = class AdminController {
     constructor(adminService) {
         this.adminService = adminService;
     }
-    allReferal() {
-        return this.adminService.findAll();
+    allReferal(query) {
+        return this.adminService.findAll(query);
     }
     createReferal(dto) {
         return this.adminService.createReferal(dto);
     }
+    IsActive(query) {
+        return this.adminService.IsActiveProtcess(query);
+    }
+    async PaymetOrder(query) {
+        return this.adminService.PaymetOrder(query);
+    }
+    SetPaymetStatus(body) {
+        return this.adminService.SetPaymetStatus(body);
+    }
 };
 __decorate([
-    (0, common_1.Get)('referal'),
+    (0, common_1.Get)('users'),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [query_dto_1.QueryDto]),
+    __metadata("design:returntype", Promise)
 ], AdminController.prototype, "allReferal", null);
 __decorate([
     (0, common_1.Post)('referal'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_referal_dto_1.CreateReferalDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], AdminController.prototype, "createReferal", null);
+__decorate([
+    (0, common_1.Patch)('user/active'),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [query_dto_1.isActiveDto]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "IsActive", null);
+__decorate([
+    (0, common_1.Get)('paymet/orders'),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "PaymetOrder", null);
+__decorate([
+    (0, common_1.Patch)('paymet/status'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [setPaymetStatus_dto_1.default]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "SetPaymetStatus", null);
 AdminController = __decorate([
     (0, common_1.Controller)('admin'),
     __metadata("design:paramtypes", [admin_service_1.AdminService])

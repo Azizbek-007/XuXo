@@ -13,5 +13,5 @@ export const TypeOrmConfig: TypeOrmModuleOptions = {
   entities: entities,
   // autoLoadEntities: true,
   synchronize: true,
-  logging: true
+  logging: false
 };  

@@ -34,3 +34,13 @@ export enum Role {
     User = 'User',
     Admin = 'Admin',
 }
+
+export enum isActive {
+    Active = 1,
+    NotActive = 0
+}
+export enum PaymetRole {
+    Waiting = 'Waiting',
+    Paid = 'Paid',
+    Canceled = 'Canceled'
+}

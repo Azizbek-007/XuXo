@@ -71,6 +71,14 @@ __decorate([
     __metadata("design:type", String)
 ], Users.prototype, "role", void 0);
 __decorate([
+    (0, typeorm_1.Column)({
+        type: 'enum',
+        enum: types_1.isActive,
+        default: types_1.isActive.NotActive
+    }),
+    __metadata("design:type", Number)
+], Users.prototype, "isActive", void 0);
+__decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
 ], Users.prototype, "created_at", void 0);

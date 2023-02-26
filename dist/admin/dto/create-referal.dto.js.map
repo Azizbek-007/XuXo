@@ -1,1 +1,1 @@
-{"version":3,"file":"create-referal.dto.js","sourceRoot":"","sources":["../../../src/admin/dto/create-referal.dto.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,qDAA2C;AAE3C,MAAa,gBAAgB;CAQ5B;AANG;IAAC,IAAA,0BAAQ,GAAE;;oDACQ;AAEnB;IAAC,IAAA,0BAAQ,GAAE;;iDACK;AANpB,4CAQC"}
+{"version":3,"file":"create-referal.dto.js","sourceRoot":"","sources":["../../../src/admin/dto/create-referal.dto.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,qDAA2C;AAE3C,MAAa,gBAAgB;CAO5B;AALG;IAAC,IAAA,0BAAQ,GAAE;;oDACQ;AAEnB;IAAC,IAAA,0BAAQ,GAAE;;iDACK;AANpB,4CAOC"}

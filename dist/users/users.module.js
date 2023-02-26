@@ -17,7 +17,7 @@ let UsersModule = class UsersModule {
 UsersModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            typeorm_1.TypeOrmModule.forFeature([typeorm_2.Users, typeorm_2.Referals])
+            typeorm_1.TypeOrmModule.forFeature([typeorm_2.Users, typeorm_2.Referals, typeorm_2.Paymets])
         ],
         providers: [users_service_1.UsersService],
         exports: [users_service_1.UsersService],

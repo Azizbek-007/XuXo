@@ -28,3 +28,12 @@ export declare enum Role {
     User = "User",
     Admin = "Admin"
 }
+export declare enum isActive {
+    Active = 1,
+    NotActive = 0
+}
+export declare enum PaymetRole {
+    Waiting = "Waiting",
+    Paid = "Paid",
+    Canceled = "Canceled"
+}

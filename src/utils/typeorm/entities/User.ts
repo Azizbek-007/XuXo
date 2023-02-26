@@ -1,4 +1,4 @@
-import { UserStatus, Role } from "src/utils/types";
+import { UserStatus, Role, isActive } from "src/utils/types";
 import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('Users')
@@ -44,7 +44,14 @@ export class Users extends BaseEntity {
         enum: Role,
         default: Role.User
       })
-    role: Role
+    role: Role;
+
+    @Column({
+      type: 'enum',
+      enum: isActive,
+      default: isActive.NotActive
+    })
+    isActive: isActive;
 
     @CreateDateColumn() 
     created_at: Date;

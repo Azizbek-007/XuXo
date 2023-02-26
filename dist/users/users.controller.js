@@ -17,6 +17,8 @@ const common_1 = require("@nestjs/common");
 const get_user_decorator_1 = require("../auth/utils/get-user.decorator");
 const jwt_auth_guard_1 = require("../auth/utils/jwt/jwt-auth.guard");
 const typeorm_1 = require("../utils/typeorm");
+const cash_out_dto_1 = require("./dto/cash-out.dto");
+const user_update_dto_1 = require("./dto/user-update.dto");
 const users_service_1 = require("./users.service");
 let UsersController = class UsersController {
     constructor(usersService) {
@@ -25,14 +27,20 @@ let UsersController = class UsersController {
     myProfile(user) {
         return this.usersService.Profile(user['id']);
     }
+    myProfileUpdate(dto, user) {
+        return this.usersService.ProfileUpdate(user, dto);
+    }
     myReferal(user) {
         return this.usersService.Referal(user);
     }
     FindReferal(id) {
         return this.usersService.FinReferal(id);
     }
-    AdditonTreeCount(user) {
-        return this.usersService.TreeAdditon(user);
+    CashOut(dto, user) {
+        return this.usersService.cashOut(user, dto);
+    }
+    CashOutOrders(user) {
+        return this.usersService.CashOutOrders(user);
     }
 };
 __decorate([
@@ -42,6 +50,14 @@ __decorate([
     __metadata("design:paramtypes", [typeorm_1.Users]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "myProfile", null);
+__decorate([
+    (0, common_1.Patch)('profile'),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, get_user_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [user_update_dto_1.default, typeorm_1.Users]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "myProfileUpdate", null);
 __decorate([
     (0, common_1.Get)('referal'),
     __param(0, (0, get_user_decorator_1.GetUser)()),
@@ -57,12 +73,20 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "FindReferal", null);
 __decorate([
-    (0, common_1.Patch)('tree'),
+    (0, common_1.Post)('cashout'),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, get_user_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [cash_out_dto_1.CashOutDto, typeorm_1.Users]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "CashOut", null);
+__decorate([
+    (0, common_1.Get)('cashout/orders'),
     __param(0, (0, get_user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [typeorm_1.Users]),
     __metadata("design:returntype", void 0)
-], UsersController.prototype, "AdditonTreeCount", null);
+], UsersController.prototype, "CashOutOrders", null);
 UsersController = __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Controller)('user'),

@@ -13,6 +13,6 @@ exports.TypeOrmConfig = {
     database: process.env.DB_NAME,
     entities: typeorm_1.default,
     synchronize: true,
-    logging: true
+    logging: false
 };
 //# sourceMappingURL=tyeporm.config.js.map

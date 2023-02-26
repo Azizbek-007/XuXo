@@ -19,7 +19,7 @@ AdminModule = __decorate([
     (0, common_1.Module)({
         imports: [
             users_module_1.UsersModule,
-            typeorm_1.TypeOrmModule.forFeature([typeorm_2.Referals, typeorm_2.Users])
+            typeorm_1.TypeOrmModule.forFeature([typeorm_2.Referals, typeorm_2.Users, typeorm_2.Paymets])
         ],
         controllers: [admin_controller_1.AdminController],
         providers: [admin_service_1.AdminService]

@@ -1,4 +1,4 @@
-import { UserStatus, Role } from "src/utils/types";
+import { UserStatus, Role, isActive } from "src/utils/types";
 import { BaseEntity } from "typeorm";
 export declare class Users extends BaseEntity {
     id: number;
@@ -14,6 +14,7 @@ export declare class Users extends BaseEntity {
     tree: Number[];
     status: UserStatus;
     role: Role;
+    isActive: isActive;
     created_at: Date;
     deleted_at: Date;
 }

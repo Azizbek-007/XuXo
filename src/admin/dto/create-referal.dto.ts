@@ -7,5 +7,4 @@ export class CreateReferalDto {
 
     @IsNumber()
     referal: number;
-
 }
