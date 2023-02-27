@@ -26,7 +26,8 @@ export class AuthService {
   }
 
   async login(user: Users) {
-    const payload: JwtPayload = { phone_number: user.phone_number, id: user.id, roles: user.role };
+    console.log(user)
+    const payload: JwtPayload = { phone_number: user.phone_number, id: user.id, role: user['role'] };
     delete user.password;
     const token: string = this.jwtService.sign(payload);
 

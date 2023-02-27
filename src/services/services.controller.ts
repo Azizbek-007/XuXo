@@ -5,7 +5,12 @@ import { UpdateServiceDto } from './dto/update-service.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from './s3.service';
 import { FileStorage } from './file.storage';
+import { JwtAuthGuard } from 'src/auth/utils/jwt/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/utils/role/roles.guard';
+import { Roles } from 'src/auth/utils/role/roles.decorator';
+import { Role } from 'src/utils/types';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('services')
 export class ServicesController {
   constructor(
@@ -13,6 +18,7 @@ export class ServicesController {
     private readonly FileUploadService: FileUploadService
     ) {}
 
+  @Roles(Role.Admin)
   @Post()
   @UseInterceptors(FileInterceptor('image', FileStorage))
   async sendMesage(
@@ -29,12 +35,13 @@ export class ServicesController {
   findAll() {
     return this.servicesService.findAll();
   }
-
+  
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.servicesService.findOne(+id);
   }
 
+  @Roles(Role.Admin)
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.servicesService.delete(+id);

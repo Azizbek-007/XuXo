@@ -13,7 +13,7 @@ export type CreateUserDetails = {
 export type JwtPayload = {
     id: number;
     phone_number: string;
-    roles: string;
+    role: string;
 };
 export declare enum UserStatus {
     level_1 = "agent",

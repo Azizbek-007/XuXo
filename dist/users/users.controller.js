@@ -25,6 +25,7 @@ let UsersController = class UsersController {
         this.usersService = usersService;
     }
     myProfile(user) {
+        console.log(user);
         return this.usersService.Profile(user['id']);
     }
     myProfileUpdate(dto, user) {

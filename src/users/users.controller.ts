@@ -16,6 +16,7 @@ export class UsersController {
 
     @Get('profile')
     myProfile (@GetUser() user: Users) {
+        console.log(user)
         return this.usersService.Profile(user['id'])
     }
 

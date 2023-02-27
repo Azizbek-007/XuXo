@@ -14,6 +14,10 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminController = void 0;
 const common_1 = require("@nestjs/common");
+const jwt_auth_guard_1 = require("../auth/utils/jwt/jwt-auth.guard");
+const roles_decorator_1 = require("../auth/utils/role/roles.decorator");
+const roles_guard_1 = require("../auth/utils/role/roles.guard");
+const types_1 = require("../utils/types");
 const admin_service_1 = require("./admin.service");
 const create_referal_dto_1 = require("./dto/create-referal.dto");
 const query_dto_1 = require("./dto/query.dto");
@@ -74,6 +78,8 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "SetPaymetStatus", null);
 AdminController = __decorate([
+    (0, roles_decorator_1.Roles)(types_1.Role.Admin),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, common_1.Controller)('admin'),
     __metadata("design:paramtypes", [admin_service_1.AdminService])
 ], AdminController);

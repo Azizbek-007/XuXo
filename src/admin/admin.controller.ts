@@ -1,10 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Query, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/utils/jwt/jwt-auth.guard';
+import { Roles } from 'src/auth/utils/role/roles.decorator';
+import { RolesGuard } from 'src/auth/utils/role/roles.guard';
+import { Role } from 'src/utils/types';
 import { AdminService } from './admin.service';
 import { CreateReferalDto } from './dto/create-referal.dto';
 import { isActiveDto, QueryDto } from './dto/query.dto';
 import PaymetStatusDto from './dto/setPaymetStatus.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 
+@Roles(Role.Admin)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}

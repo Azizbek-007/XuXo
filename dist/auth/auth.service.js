@@ -28,7 +28,8 @@ let AuthService = class AuthService {
         return isPasswordValid ? user : null;
     }
     async login(user) {
-        const payload = { phone_number: user.phone_number, id: user.id, roles: user.role };
+        console.log(user);
+        const payload = { phone_number: user.phone_number, id: user.id, role: user['role'] };
         delete user.password;
         const token = this.jwtService.sign(payload);
         (0, payloadRes_1.ApiRes)('Succesfuly login', common_1.HttpStatus.OK, { token, user });
