@@ -19,7 +19,6 @@ const users_service_1 = require("../users/users.service");
 const auth_service_1 = require("./auth.service");
 const jwt_auth_guard_1 = require("./utils/jwt/jwt-auth.guard");
 const local_auth_guard_1 = require("./utils/local/local-auth.guard");
-const roles_guard_1 = require("./utils/role/roles.guard");
 let AuthController = class AuthController {
     constructor(authService, usersService) {
         this.authService = authService;
@@ -43,7 +42,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "register", null);
 __decorate([
-    (0, common_1.UseGuards)(local_auth_guard_1.LocalAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)(local_auth_guard_1.LocalAuthGuard),
     (0, common_1.Post)('login'),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),

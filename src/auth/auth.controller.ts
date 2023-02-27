@@ -4,7 +4,7 @@ import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './utils/jwt/jwt-auth.guard';
 import { LocalAuthGuard } from './utils/local/local-auth.guard';
-import { RolesGuard } from './utils/role/roles.guard';
+
 
 @Controller('auth')
 export class AuthController {
@@ -17,7 +17,7 @@ export class AuthController {
     register (@Body() userCreate: CreateUserDto) {
         return this.usersService.createUser(userCreate);
     }
-    @UseGuards(LocalAuthGuard, RolesGuard)
+    @UseGuards(LocalAuthGuard)
     @Post('login')
     async login(@Request() req) {
         return this.authService.login(req.user);

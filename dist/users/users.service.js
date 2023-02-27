@@ -30,10 +30,16 @@ let UsersService = class UsersService {
         const existingUser = await this.usersRepository.findOneBy({ phone_number: userDetails.phone_number });
         if (existingUser)
             throw new common_1.HttpException('User already exists', common_1.HttpStatus.CONFLICT);
-        const password = await (0, helpers_1.hashPassword)(userDetails.password);
-        const params = Object.assign(Object.assign({}, userDetails), { password });
-        const newUser = this.usersRepository.create(params);
-        return this.usersRepository.save(newUser);
+        try {
+            const password = await (0, helpers_1.hashPassword)(userDetails.password);
+            const params = Object.assign(Object.assign({}, userDetails), { password });
+            const newUser = this.usersRepository.create(params);
+            let data = this.usersRepository.save(newUser);
+        }
+        catch (error) {
+            console.log(error);
+            return error;
+        }
     }
     async findOne(phone_number) {
         return this.usersRepository.findOneBy({ phone_number });

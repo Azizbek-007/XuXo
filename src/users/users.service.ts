@@ -20,14 +20,20 @@ export class UsersService {
     private PaymetsRepository: Repository<Paymets>
   ){}
 
-  async createUser(userDetails: CreateUserDetails): Promise<Users> {
+  async createUser(userDetails: CreateUserDetails) {
     const existingUser = await this.usersRepository.findOneBy({ phone_number: userDetails.phone_number })
     if (existingUser)
       throw new HttpException('User already exists', HttpStatus.CONFLICT);
+      try {
     const password = await hashPassword(userDetails.password);
     const params = { ...userDetails, password };
     const newUser = this.usersRepository.create(params);
-    return this.usersRepository.save(newUser);
+ 
+      let data = this.usersRepository.save(newUser);
+    } catch (error) {
+      console.log(error)
+      return error
+    }
   }
 
   async findOne(phone_number: string): Promise<Users | undefined> {

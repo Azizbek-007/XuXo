@@ -5,7 +5,7 @@ export declare class AuthController {
     private authService;
     private usersService;
     constructor(authService: AuthService, usersService: UsersService);
-    register(userCreate: CreateUserDto): Promise<import("../utils/typeorm").Users>;
+    register(userCreate: CreateUserDto): Promise<any>;
     login(req: any): Promise<void>;
     getProfile(req: any): any;
 }

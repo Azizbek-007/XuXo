@@ -5,9 +5,6 @@ import { UpdateServiceDto } from './dto/update-service.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from './s3.service';
 import { FileStorage } from './file.storage';
-import { Roles } from 'src/auth/utils/role/roles.decorator';
-import { RolesGuard } from 'src/auth/utils/role/roles.guard';
-import { Role } from 'src/utils/types';
 
 @Controller('services')
 export class ServicesController {

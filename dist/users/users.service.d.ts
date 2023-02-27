@@ -9,7 +9,7 @@ export declare class UsersService {
     private PaymetsRepository;
     c: number;
     constructor(usersRepository: Repository<Users>, ReferalRepository: Repository<Referals>, PaymetsRepository: Repository<Paymets>);
-    createUser(userDetails: CreateUserDetails): Promise<Users>;
+    createUser(userDetails: CreateUserDetails): Promise<any>;
     findOne(phone_number: string): Promise<Users | undefined>;
     findOneBy(id: number): Promise<Users>;
     Profile(user: Users['id']): Promise<void>;
