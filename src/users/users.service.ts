@@ -38,10 +38,7 @@ export class UsersService {
       delete data.password;
     ApiRes('Successfuly', HttpStatus.OK, data)
     } catch (error) {
-      if(error.code == "ER_DUP_ENTRY"){
-        ApiRes('User already exists', HttpStatus.CONFLICT);
-      }
-       ApiRes('Error', HttpStatus.BAD_REQUEST, error.sqlMessage)
+       ApiRes('Error', HttpStatus.BAD_REQUEST, error)
     }
   }
 

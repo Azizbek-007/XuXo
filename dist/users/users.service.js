@@ -45,10 +45,7 @@ let UsersService = class UsersService {
             (0, payloadRes_1.ApiRes)('Successfuly', common_1.HttpStatus.OK, data);
         }
         catch (error) {
-            if (error.code == "ER_DUP_ENTRY") {
-                (0, payloadRes_1.ApiRes)('User already exists', common_1.HttpStatus.CONFLICT);
-            }
-            (0, payloadRes_1.ApiRes)('Error', common_1.HttpStatus.BAD_REQUEST, error.sqlMessage);
+            (0, payloadRes_1.ApiRes)('Error', common_1.HttpStatus.BAD_REQUEST, error);
         }
     }
     async findOne(phone_number) {
