@@ -28,8 +28,9 @@ export class UsersService {
     const password = await hashPassword(userDetails.password);
     const params = { ...userDetails, password };
     const newUser = this.usersRepository.create(params);
- 
-      let data = this.usersRepository.save(newUser);
+    let data = await this.usersRepository.save(newUser);
+    delete data.password;
+    ApiRes('Successfuly', HttpStatus.OK, data)
     } catch (error) {
       console.log(error)
       return error

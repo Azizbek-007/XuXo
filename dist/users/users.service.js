@@ -34,7 +34,9 @@ let UsersService = class UsersService {
             const password = await (0, helpers_1.hashPassword)(userDetails.password);
             const params = Object.assign(Object.assign({}, userDetails), { password });
             const newUser = this.usersRepository.create(params);
-            let data = this.usersRepository.save(newUser);
+            let data = await this.usersRepository.save(newUser);
+            delete data.password;
+            (0, payloadRes_1.ApiRes)('Successfuly', common_1.HttpStatus.OK, data);
         }
         catch (error) {
             console.log(error);
