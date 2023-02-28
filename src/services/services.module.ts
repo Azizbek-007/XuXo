@@ -13,3 +13,4 @@ import { FileUploadService } from './s3.service';
   providers: [ServicesService, FileUploadService]
 })
 export class ServicesModule {}
+ 
