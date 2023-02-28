@@ -28,18 +28,16 @@ export class UsersService {
         passport_number: userDetails.passport_number
       }
     ])
-    if (existingUser)
+    if (existingUser){
       throw new HttpException('User already exists', HttpStatus.CONFLICT);
-    try {
-      const password = await hashPassword(userDetails.password);
-      const params = { ...userDetails, password };
-      const newUser = this.usersRepository.create(params);
-      let data = await this.usersRepository.save(newUser);
-      delete data.password;
-    ApiRes('Successfuly', HttpStatus.OK, data)
-    } catch (error) {
-       ApiRes('Error', HttpStatus.BAD_REQUEST, error)
     }
+    const password = await hashPassword(userDetails.password);
+    const params = { ...userDetails, password };
+    const newUser = this.usersRepository.create(params);
+    let data = await this.usersRepository.save(newUser);
+    delete data['password'];
+    console.log(data)
+    ApiRes('Successfuly', HttpStatus.OK, data);
   }
 
   async findOne(phone_number: string): Promise<Users | undefined> {

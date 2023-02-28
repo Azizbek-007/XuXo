@@ -34,19 +34,16 @@ let UsersService = class UsersService {
                 passport_number: userDetails.passport_number
             }
         ]);
-        if (existingUser)
+        if (existingUser) {
             throw new common_1.HttpException('User already exists', common_1.HttpStatus.CONFLICT);
-        try {
-            const password = await (0, helpers_1.hashPassword)(userDetails.password);
-            const params = Object.assign(Object.assign({}, userDetails), { password });
-            const newUser = this.usersRepository.create(params);
-            let data = await this.usersRepository.save(newUser);
-            delete data.password;
-            (0, payloadRes_1.ApiRes)('Successfuly', common_1.HttpStatus.OK, data);
         }
-        catch (error) {
-            (0, payloadRes_1.ApiRes)('Error', common_1.HttpStatus.BAD_REQUEST, error);
-        }
+        const password = await (0, helpers_1.hashPassword)(userDetails.password);
+        const params = Object.assign(Object.assign({}, userDetails), { password });
+        const newUser = this.usersRepository.create(params);
+        let data = await this.usersRepository.save(newUser);
+        delete data['password'];
+        console.log(data);
+        (0, payloadRes_1.ApiRes)('Successfuly', common_1.HttpStatus.OK, data);
     }
     async findOne(phone_number) {
         return this.usersRepository.findOneBy({ phone_number });
