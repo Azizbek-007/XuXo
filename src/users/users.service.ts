@@ -133,6 +133,7 @@ export class UsersService {
   }
   async ProfileUpdate (user: Users, dto: UpdateUserDto) {
     await this.usersRepository.update(user['id'], dto);
+    ApiRes("Updated", HttpStatus.OK);
   }
   async cashOut (user: Users, dto: CashOutDto) {
     const find_user = await this.usersRepository.findOneBy({ id: user['id'] }); 

@@ -131,6 +131,7 @@ let UsersService = class UsersService {
     }
     async ProfileUpdate(user, dto) {
         await this.usersRepository.update(user['id'], dto);
+        (0, payloadRes_1.ApiRes)("Updated", common_1.HttpStatus.OK);
     }
     async cashOut(user, dto) {
         const find_user = await this.usersRepository.findOneBy({ id: user['id'] });
