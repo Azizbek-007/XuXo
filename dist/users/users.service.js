@@ -27,7 +27,13 @@ let UsersService = class UsersService {
         this.c = 0;
     }
     async createUser(userDetails) {
-        const existingUser = await this.usersRepository.findOneBy({ phone_number: userDetails.phone_number });
+        const existingUser = await this.usersRepository.findOneBy([
+            {
+                phone_number: userDetails.phone_number
+            }, {
+                passport_number: userDetails.passport_number
+            }
+        ]);
         if (existingUser)
             throw new common_1.HttpException('User already exists', common_1.HttpStatus.CONFLICT);
         try {
@@ -39,8 +45,10 @@ let UsersService = class UsersService {
             (0, payloadRes_1.ApiRes)('Successfuly', common_1.HttpStatus.OK, data);
         }
         catch (error) {
-            console.log(error);
-            return error;
+            if (error.code == "ER_DUP_ENTRY") {
+                (0, payloadRes_1.ApiRes)('User already exists', common_1.HttpStatus.CONFLICT);
+            }
+            (0, payloadRes_1.ApiRes)('Error', common_1.HttpStatus.BAD_REQUEST, error.sqlMessage);
         }
     }
     async findOne(phone_number) {

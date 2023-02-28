@@ -21,19 +21,27 @@ export class UsersService {
   ){}
 
   async createUser(userDetails: CreateUserDetails) {
-    const existingUser = await this.usersRepository.findOneBy({ phone_number: userDetails.phone_number })
+    const existingUser = await this.usersRepository.findOneBy([
+      { 
+        phone_number: userDetails.phone_number
+      }, {
+        passport_number: userDetails.passport_number
+      }
+    ])
     if (existingUser)
       throw new HttpException('User already exists', HttpStatus.CONFLICT);
-      try {
-    const password = await hashPassword(userDetails.password);
-    const params = { ...userDetails, password };
-    const newUser = this.usersRepository.create(params);
-    let data = await this.usersRepository.save(newUser);
-    delete data.password;
+    try {
+      const password = await hashPassword(userDetails.password);
+      const params = { ...userDetails, password };
+      const newUser = this.usersRepository.create(params);
+      let data = await this.usersRepository.save(newUser);
+      delete data.password;
     ApiRes('Successfuly', HttpStatus.OK, data)
     } catch (error) {
-      console.log(error)
-      return error
+      if(error.code == "ER_DUP_ENTRY"){
+        ApiRes('User already exists', HttpStatus.CONFLICT);
+      }
+       ApiRes('Error', HttpStatus.BAD_REQUEST, error.sqlMessage)
     }
   }
 
