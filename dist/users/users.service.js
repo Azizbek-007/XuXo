@@ -142,9 +142,9 @@ let UsersService = class UsersService {
                     amoute: dto['amoute']
                 });
                 const data = await new_paymet_trans.save();
-                await this.usersRepository.update(find_user['id'], {
-                    balance: find_user['balance'] - dto['amoute']
-                });
+                const balance = Number(find_user['balance']) - Number(dto['amoute']);
+                await this.usersRepository.update(find_user['id'], { balance });
+                data.customer.balance = balance;
                 (0, payloadRes_1.ApiRes)('Craeted order for money withdrawal', common_1.HttpStatus.OK, data);
             }
             else {

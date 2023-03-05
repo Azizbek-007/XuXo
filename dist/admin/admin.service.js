@@ -117,7 +117,7 @@ let AdminService = class AdminService {
                 'role',
                 'status',
                 'isActive',
-                'created_at'
+                'created_at',
             ],
             order: { id: "DESC" },
             take: take,
