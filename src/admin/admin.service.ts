@@ -129,6 +129,7 @@ export class AdminService {
         }
     );
 
+    result.filter(e => delete e.password)
     ApiRes('Found', HttpStatus.OK, {data: result, count: total})
   }
 

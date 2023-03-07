@@ -114,6 +114,7 @@ let AdminService = class AdminService {
             take: take,
             skip: skip
         });
+        result.filter(e => delete e.password);
         (0, payloadRes_1.ApiRes)('Found', common_1.HttpStatus.OK, { data: result, count: total });
     }
     async IsActiveProtcess(query) {
