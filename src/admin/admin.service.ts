@@ -4,7 +4,7 @@ import { UsersService } from 'src/users/users.service';
 import { ApiRes } from 'src/utils/payloadRes';
 import { Paymets, Referals, Users } from 'src/utils/typeorm';
 import { isActive, PaymetRole, UserStatus } from 'src/utils/types';
-import { Repository } from 'typeorm';
+import { Any, Repository } from 'typeorm';
 import { CreateReferalDto } from './dto/create-referal.dto';
 import { isActiveDto, QueryDto } from './dto/query.dto';
 import PaymetStatusDto from './dto/setPaymetStatus.dto';
@@ -110,27 +110,62 @@ export class AdminService {
  
   async findAll(query: QueryDto) {
     console.log(query)
-    const take = query.take || 10;
-    const skip = query.page || 0;
+    const take = query.take || 10
+    const page=query.page || 1;
+    const skip= (page-1) * take ;
+
     const isActive = query.IsActive;
     
-    const [result, total] = await this.usersRepository.findAndCount(
-        {
-            where: { isActive },
-            select: { 
-              referals: {
-                referal1_id: true,
-                referal2_id: true
-              }
+    let result = await this.usersRepository.find({
+      relations: {
+        referals: true
+      },
+      where: { isActive },
+  
+      order: { id: "DESC" },
+      take: take,
+      skip: skip
+    });
+
+    let payload = [];
+    for await (const num of result) {
+      let r_data = num['referals']
+      if(r_data.length > 0){
+        let id = r_data[0]['id']; 
+
+     
+        let data = await this.ReferalRepository.findOne({ 
+            relations: {
+              referal_1: true,
+              referal_2: true
             },
-            order: { id: "DESC" },
-            take: take,
-            skip: skip
+            where: { id }
+          });
+          console.log(data)
+        const arr = [
+          'password', 'balance', 'passport_number', 'phone_number', 'pinfl', 'card_number', 'expiration_date', 'tree',
+          'status', 'created_at', 'referals'
+        ]
+        for await (const n of arr){
+          const r_1 = data['referal_1'], 
+          r_2 = data['referal_2']
+          if(r_1 != null){
+            delete r_1[n]
+          }
+          if(r_2 != null) {
+            delete r_2[n]
+          }
         }
-    );
+        
+        num.referals = [ data ]
+      }
+      payload.push(num)
+    }
+   
+    let total = await this.usersRepository.count({ where: { isActive } });
 
     result.filter(e => delete e.password)
-    ApiRes('Found', HttpStatus.OK, {data: result, count: total})
+    ApiRes('Found', HttpStatus.OK, {data: payload, count: total})
   }
 
   async IsActiveProtcess (query: isActiveDto) {

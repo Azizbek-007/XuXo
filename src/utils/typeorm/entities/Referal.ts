@@ -12,7 +12,7 @@ export class Referals extends BaseEntity {
     @Column({ unique: true })
     customerId: number
 
-    @OneToOne(() => Users, { nullable: false })
+    @OneToOne(() => Users, { nullable: false})
     @JoinColumn({ name: 'referal1_id' })
     referal_1: Users
 
@@ -31,4 +31,5 @@ export class Referals extends BaseEntity {
 
     @DeleteDateColumn({ select: false })
     deleted_at: Date;
+  static first_name: any;
 }

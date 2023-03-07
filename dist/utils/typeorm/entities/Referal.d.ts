@@ -10,4 +10,5 @@ export declare class Referals extends BaseEntity {
     referal2_id: number;
     created_at: Date;
     deleted_at: Date;
+    static first_name: any;
 }

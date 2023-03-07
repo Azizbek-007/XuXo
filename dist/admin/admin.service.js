@@ -11,6 +11,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminService = void 0;
 const common_1 = require("@nestjs/common");
@@ -98,24 +105,88 @@ let AdminService = class AdminService {
         }
     }
     async findAll(query) {
+        var _a, e_1, _b, _c, _d, e_2, _e, _f;
         console.log(query);
         const take = query.take || 10;
-        const skip = query.page || 0;
+        const page = query.page || 1;
+        const skip = (page - 1) * take;
         const isActive = query.IsActive;
-        const [result, total] = await this.usersRepository.findAndCount({
-            where: { isActive },
-            select: {
-                referals: {
-                    referal1_id: true,
-                    referal2_id: true
-                }
+        let result = await this.usersRepository.find({
+            relations: {
+                referals: true
             },
+            where: { isActive },
             order: { id: "DESC" },
             take: take,
             skip: skip
         });
+        let payload = [];
+        try {
+            for (var _g = true, result_1 = __asyncValues(result), result_1_1; result_1_1 = await result_1.next(), _a = result_1_1.done, !_a;) {
+                _c = result_1_1.value;
+                _g = false;
+                try {
+                    const num = _c;
+                    let r_data = num['referals'];
+                    if (r_data.length > 0) {
+                        let id = r_data[0]['id'];
+                        let data = await this.ReferalRepository.findOne({
+                            relations: {
+                                referal_1: true,
+                                referal_2: true
+                            },
+                            where: { id }
+                        });
+                        console.log(data);
+                        const arr = [
+                            'password', 'balance', 'passport_number', 'phone_number', 'pinfl', 'card_number', 'expiration_date', 'tree',
+                            'status', 'created_at', 'referals'
+                        ];
+                        try {
+                            for (var _h = true, arr_1 = (e_2 = void 0, __asyncValues(arr)), arr_1_1; arr_1_1 = await arr_1.next(), _d = arr_1_1.done, !_d;) {
+                                _f = arr_1_1.value;
+                                _h = false;
+                                try {
+                                    const n = _f;
+                                    const r_1 = data['referal_1'], r_2 = data['referal_2'];
+                                    if (r_1 != null) {
+                                        delete r_1[n];
+                                    }
+                                    if (r_2 != null) {
+                                        delete r_2[n];
+                                    }
+                                }
+                                finally {
+                                    _h = true;
+                                }
+                            }
+                        }
+                        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+                        finally {
+                            try {
+                                if (!_h && !_d && (_e = arr_1.return)) await _e.call(arr_1);
+                            }
+                            finally { if (e_2) throw e_2.error; }
+                        }
+                        num.referals = [data];
+                    }
+                    payload.push(num);
+                }
+                finally {
+                    _g = true;
+                }
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (!_g && !_a && (_b = result_1.return)) await _b.call(result_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        let total = await this.usersRepository.count({ where: { isActive } });
         result.filter(e => delete e.password);
-        (0, payloadRes_1.ApiRes)('Found', common_1.HttpStatus.OK, { data: result, count: total });
+        (0, payloadRes_1.ApiRes)('Found', common_1.HttpStatus.OK, { data: payload, count: total });
     }
     async IsActiveProtcess(query) {
         const { id, active } = query;
