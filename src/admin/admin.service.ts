@@ -166,7 +166,7 @@ export class AdminService {
 
   async SetPaymetStatus(dto: PaymetStatusDto) {
     const customer_ = await this.usersRepository.findOneBy({ id: dto['customer'] });
-    const order_ = await this.PaymetsRepository.findOneBy({ id: dto['id'] });
+    const order_ = await this.PaymetsRepository.findOneBy({ id: dto['order_id'] });
     if(!customer_ || !order_){
       ApiRes('Customer or Order Not Found', HttpStatus.NOT_FOUND);
     }
