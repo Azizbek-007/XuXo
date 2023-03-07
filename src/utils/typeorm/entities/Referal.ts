@@ -16,14 +16,14 @@ export class Referals extends BaseEntity {
     @JoinColumn({ name: 'referal1_id' })
     referal_1: Users
 
-    @Column({ unique: true, select: false })
+    @Column({ unique: true })
     referal1_id: number
 
     @OneToOne(() => Users, { nullable: true })
     @JoinColumn({ name: 'referal2_id'})
     referal_2: Users
 
-    @Column({ nullable: true, unique: true, select:false })
+    @Column({ nullable: true, unique: true})
     referal2_id: number
 
     @CreateDateColumn() 
