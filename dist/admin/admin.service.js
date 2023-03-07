@@ -102,7 +102,7 @@ let AdminService = class AdminService {
         const take = query.take || 10;
         const skip = query.page || 0;
         const isActive = query.IsActive;
-        let result = await this.usersRepository.find({
+        const [result, total] = await this.usersRepository.findAndCount({
             where: { isActive },
             select: {
                 referals: {
@@ -114,7 +114,6 @@ let AdminService = class AdminService {
             take: take,
             skip: skip
         });
-        let total = await this.usersRepository.count();
         (0, payloadRes_1.ApiRes)('Found', common_1.HttpStatus.OK, { data: result, count: total });
     }
     async IsActiveProtcess(query) {

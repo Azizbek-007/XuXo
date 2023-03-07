@@ -113,21 +113,21 @@ export class AdminService {
     const take = query.take || 10;
     const skip = query.page || 0;
     const isActive = query.IsActive;
-
-    let result = await this.usersRepository.find({
-      where: { isActive },
-      select: { 
-        referals: {
-          referal1_id: true,
-          referal2_id: true
+    
+    const [result, total] = await this.usersRepository.findAndCount(
+        {
+            where: { isActive },
+            select: { 
+              referals: {
+                referal1_id: true,
+                referal2_id: true
+              }
+            },
+            order: { id: "DESC" },
+            take: take,
+            skip: skip
         }
-      },
-      order: { id: "DESC" },
-      take: take,
-      skip: skip
-    })
-
-    let total = await this.usersRepository.count()  
+    );
 
     ApiRes('Found', HttpStatus.OK, {data: result, count: total})
   }
