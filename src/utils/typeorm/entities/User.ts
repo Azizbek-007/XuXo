@@ -13,7 +13,7 @@ export class Users extends BaseEntity {
     @Column()
     last_name: string;
 
-    @Column({ select: false })
+    @Column()
     password: string;
 
     @Column({ default: 0 })
@@ -63,23 +63,3 @@ export class Users extends BaseEntity {
     @DeleteDateColumn({ select: false })
     deleted_at: Date;
 }
-/*
-"id": 6,
-"phone_number": "+998910000001",
-"password": "1234567890"
-
-id: 8
-"phone_number": "+998910000002",
-"password": "1234567890"
-
-id: 11
-"phone_number": "+998910000003",
-"password": "1234567890"
-
-id: 12
-"phone_number": "+998910000004",
-"password": "1234567890"
-
-id: 13
-"phone_number": "+998910000005",
-"password": "1234567890" */

@@ -17,7 +17,6 @@ export class AuthService {
     const user = await this.usersService.findOne(phone_number);
     if (!user)
       throw new HttpException('Invalid Credentials', HttpStatus.UNAUTHORIZED);
-      
     const isPasswordValid = await compareHash(
       password,
       user.password,
