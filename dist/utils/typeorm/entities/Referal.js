@@ -19,8 +19,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Referals.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => User_1.Users, { nullable: false }),
-    (0, typeorm_1.JoinColumn)(),
+    (0, typeorm_1.ManyToOne)(() => User_1.Users, (user) => user.referals),
     __metadata("design:type", User_1.Users)
 ], Referals.prototype, "customer", void 0);
 __decorate([
@@ -33,7 +32,7 @@ __decorate([
     __metadata("design:type", User_1.Users)
 ], Referals.prototype, "referal_1", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true }),
+    (0, typeorm_1.Column)({ unique: true, select: false }),
     __metadata("design:type", Number)
 ], Referals.prototype, "referal1_id", void 0);
 __decorate([
@@ -42,7 +41,7 @@ __decorate([
     __metadata("design:type", User_1.Users)
 ], Referals.prototype, "referal_2", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true, unique: true }),
+    (0, typeorm_1.Column)({ nullable: true, unique: true, select: false }),
     __metadata("design:type", Number)
 ], Referals.prototype, "referal2_id", void 0);
 __decorate([

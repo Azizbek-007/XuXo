@@ -11,13 +11,6 @@ export default class UpdateUserDto {
     last_name: string;
 
     @IsOptional()
-    @IsNotEmpty()
-    @IsString()
-    @MinLength(8)
-    @MaxLength(32)
-    password: string;
-
-    @IsOptional()
     @IsString()
     card_number: string;
 

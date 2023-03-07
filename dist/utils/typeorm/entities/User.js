@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Users = void 0;
 const types_1 = require("../../types");
 const typeorm_1 = require("typeorm");
+const Referal_1 = require("./Referal");
 let Users = class Users extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -27,7 +28,7 @@ __decorate([
     __metadata("design:type", String)
 ], Users.prototype, "last_name", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ select: false }),
     __metadata("design:type", String)
 ], Users.prototype, "password", void 0);
 __decorate([
@@ -78,6 +79,10 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], Users.prototype, "isActive", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Referal_1.Referals, (referal) => referal.customer),
+    __metadata("design:type", Array)
+], Users.prototype, "referals", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)

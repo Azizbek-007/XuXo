@@ -115,23 +115,7 @@ export class AdminService {
     const isActive = query.IsActive;
     const [result, total] = await this.usersRepository.findAndCount(
         {
-            where: { isActive }, 
-            select: [
-              'id', 
-              'first_name', 
-              'last_name', 
-              'balance', 
-              'card_number', 
-              'expiration_date', 
-              'passport_number', 
-              'phone_number',
-              'pinfl',
-              'role',
-              'status',
-              'isActive',
-              'created_at',
-              
-            ],
+            where: { isActive },
             order: { id: "DESC" },
             take: take,
             skip: skip

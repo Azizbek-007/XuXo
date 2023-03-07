@@ -1,5 +1,6 @@
 import { UserStatus, Role, isActive } from "src/utils/types";
-import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Referals } from "./Referal";
 
 @Entity('Users')
 export class Users extends BaseEntity {
@@ -12,7 +13,7 @@ export class Users extends BaseEntity {
     @Column()
     last_name: string;
 
-    @Column()
+    @Column({ select: false })
     password: string;
 
     @Column({ default: 0 })
@@ -52,6 +53,9 @@ export class Users extends BaseEntity {
       default: isActive.NotActive
     })
     isActive: isActive;
+
+    @OneToMany(() => Referals, (referal) => referal.customer)
+    referals: Referals[]
 
     @CreateDateColumn() 
     created_at: Date;

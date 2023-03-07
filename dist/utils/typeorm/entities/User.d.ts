@@ -1,5 +1,6 @@
 import { UserStatus, Role, isActive } from "src/utils/types";
 import { BaseEntity } from "typeorm";
+import { Referals } from "./Referal";
 export declare class Users extends BaseEntity {
     id: number;
     first_name: string;
@@ -15,6 +16,7 @@ export declare class Users extends BaseEntity {
     status: UserStatus;
     role: Role;
     isActive: isActive;
+    referals: Referals[];
     created_at: Date;
     deleted_at: Date;
 }

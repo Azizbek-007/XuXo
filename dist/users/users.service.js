@@ -130,7 +130,8 @@ let UsersService = class UsersService {
         (0, payloadRes_1.ApiRes)('Seccesfuly', common_1.HttpStatus.OK, OneUserRef);
     }
     async ProfileUpdate(user, dto) {
-        await this.usersRepository.update(user['id'], dto);
+        const find_user = await this.usersRepository.findOneBy({ id: user['id'] });
+        await this.usersRepository.update(find_user['id'], dto);
         (0, payloadRes_1.ApiRes)("Updated", common_1.HttpStatus.OK);
     }
     async cashOut(user, dto) {

@@ -1,4 +1,4 @@
-import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Users } from "./User";
 
 @Entity()
@@ -6,8 +6,7 @@ export class Referals extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
-    @OneToOne(() => Users, { nullable: false})
-    @JoinColumn()
+    @ManyToOne(() => Users, (user) => user.referals)
     customer: Users;
 
     @Column({ unique: true })
@@ -17,14 +16,14 @@ export class Referals extends BaseEntity {
     @JoinColumn({ name: 'referal1_id' })
     referal_1: Users
 
-    @Column({ unique: true })
+    @Column({ unique: true, select: false })
     referal1_id: number
 
     @OneToOne(() => Users, { nullable: true })
     @JoinColumn({ name: 'referal2_id'})
     referal_2: Users
 
-    @Column({ nullable: true, unique: true })
+    @Column({ nullable: true, unique: true, select:false })
     referal2_id: number
 
     @CreateDateColumn() 
