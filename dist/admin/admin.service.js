@@ -104,6 +104,12 @@ let AdminService = class AdminService {
         const isActive = query.IsActive;
         const [result, total] = await this.usersRepository.findAndCount({
             where: { isActive },
+            select: {
+                referals: {
+                    referal1_id: true,
+                    referal2_id: true
+                }
+            },
             order: { id: "DESC" },
             take: take,
             skip: skip
