@@ -140,7 +140,7 @@ let AdminService = class AdminService {
                         console.log(data);
                         const arr = [
                             'password', 'balance', 'passport_number', 'phone_number', 'pinfl', 'card_number', 'expiration_date', 'tree',
-                            'status', 'created_at', 'referals'
+                            'status', 'created_at', 'referals', 'customerId', 'referal1_id', 'referal2_id'
                         ];
                         try {
                             for (var _h = true, arr_1 = (e_2 = void 0, __asyncValues(arr)), arr_1_1; arr_1_1 = await arr_1.next(), _d = arr_1_1.done, !_d;) {

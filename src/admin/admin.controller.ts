@@ -20,6 +20,11 @@ export class AdminController {
     return this.adminService.findAll(query);
   }
 
+  @Get('users/all')
+  allUsers(@Query() query): Promise<void>{
+    return query;
+  }
+
   @Post('referal')
   createReferal(@Body() dto: CreateReferalDto): Promise<void> {
     return this.adminService.createReferal(dto);

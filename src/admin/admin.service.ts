@@ -144,7 +144,7 @@ export class AdminService {
           console.log(data)
         const arr = [
           'password', 'balance', 'passport_number', 'phone_number', 'pinfl', 'card_number', 'expiration_date', 'tree',
-          'status', 'created_at', 'referals'
+          'status', 'created_at', 'referals', 'customerId', 'referal1_id', 'referal2_id'
         ]
         for await (const n of arr){
           const r_1 = data['referal_1'], 
