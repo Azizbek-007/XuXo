@@ -227,6 +227,48 @@ let AdminService = class AdminService {
         });
         (0, payloadRes_1.ApiRes)('Successfuly', common_1.HttpStatus.OK);
     }
+    async AllUsers() {
+        var _a, e_3, _b, _c;
+        const find_user = await this.usersRepository.find({
+            select: ['id', 'first_name', 'last_name']
+        });
+        let payload = [];
+        try {
+            for (var _d = true, find_user_1 = __asyncValues(find_user), find_user_1_1; find_user_1_1 = await find_user_1.next(), _a = find_user_1_1.done, !_a;) {
+                _c = find_user_1_1.value;
+                _d = false;
+                try {
+                    const iterator = _c;
+                    const user_id = iterator['id'];
+                    const find_in_referal = await this.ReferalRepository.findOneBy([
+                        {
+                            referal1_id: user_id
+                        },
+                        {
+                            referal2_id: user_id
+                        }
+                    ]);
+                    if (find_in_referal) {
+                        payload.push(iterator);
+                    }
+                }
+                finally {
+                    _d = true;
+                }
+            }
+        }
+        catch (e_3_1) { e_3 = { error: e_3_1 }; }
+        finally {
+            try {
+                if (!_d && !_a && (_b = find_user_1.return)) await _b.call(find_user_1);
+            }
+            finally { if (e_3) throw e_3.error; }
+        }
+        if (payload.length == 0) {
+            (0, payloadRes_1.ApiRes)("Not Found Users", common_1.HttpStatus.NOT_FOUND);
+        }
+        (0, payloadRes_1.ApiRes)('Successfuly', common_1.HttpStatus.OK, payload);
+    }
 };
 AdminService = __decorate([
     (0, common_1.Injectable)(),

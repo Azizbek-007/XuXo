@@ -210,4 +210,30 @@ export class AdminService {
     });
     ApiRes('Successfuly', HttpStatus.OK);
   }
+
+  async AllUsers () {
+    const find_user = await this.usersRepository.find({
+      select: ['id', 'first_name', 'last_name']
+    });
+    let payload = [];
+    for await (const iterator of find_user) {
+      const user_id: number = iterator['id'];
+      const find_in_referal = await this.ReferalRepository.findOneBy([
+        {
+          referal1_id: user_id
+        }, 
+        {
+          referal2_id: user_id
+        }
+      ]);
+      
+      if(find_in_referal){
+        payload.push(iterator)
+      }
+    }
+    if(payload.length == 0) {
+      ApiRes("Not Found Users", HttpStatus.NOT_FOUND);
+    }
+    ApiRes('Successfuly', HttpStatus.OK, payload);   
+  }
 }

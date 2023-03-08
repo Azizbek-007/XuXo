@@ -21,8 +21,8 @@ export class AdminController {
   }
 
   @Get('users/all')
-  allUsers(@Query() query): Promise<void>{
-    return query;
+  allUsers(): Promise<void>{
+    return this.adminService.AllUsers();
   }
 
   @Post('referal')

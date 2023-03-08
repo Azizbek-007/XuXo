@@ -22,4 +22,5 @@ export declare class AdminService {
         status: PaymetRole;
     }): Promise<void>;
     SetPaymetStatus(dto: PaymetStatusDto): Promise<void>;
+    AllUsers(): Promise<void>;
 }

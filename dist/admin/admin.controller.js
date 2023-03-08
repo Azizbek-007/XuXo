@@ -30,7 +30,7 @@ let AdminController = class AdminController {
         return this.adminService.findAll(query);
     }
     allUsers(query) {
-        return query;
+        return this.adminService.AllUsers();
     }
     createReferal(dto) {
         return this.adminService.createReferal(dto);
