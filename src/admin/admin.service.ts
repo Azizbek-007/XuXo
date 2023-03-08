@@ -118,54 +118,23 @@ export class AdminService {
     
     let result = await this.usersRepository.find({
       relations: {
-        referals: true
+        referals: {
+          referal_1: true,
+          referal_2: true
+        }
       },
       where: { isActive },
-  
       order: { id: "DESC" },
+      select: {
+        
+      },
       take: take,
       skip: skip
     });
 
-    let payload = [];
-    for await (const num of result) {
-      let r_data = num['referals']
-      if(r_data.length > 0){
-        let id = r_data[0]['id']; 
-
-     
-        let data = await this.ReferalRepository.findOne({ 
-            relations: {
-              referal_1: true,
-              referal_2: true
-            },
-            where: { id }
-          });
-          console.log(data)
-        const arr = [
-          'password', 'balance', 'passport_number', 'phone_number', 'pinfl', 'card_number', 'expiration_date', 'tree',
-          'status', 'created_at', 'referals', 'customerId', 'referal1_id', 'referal2_id'
-        ]
-        for await (const n of arr){
-          const r_1 = data['referal_1'], 
-          r_2 = data['referal_2']
-          if(r_1 != null){
-            delete r_1[n]
-          }
-          if(r_2 != null) {
-            delete r_2[n]
-          }
-        }
-        
-        num.referals = [ data ]
-      }
-      payload.push(num)
-    }
    
     let total = await this.usersRepository.count({ where: { isActive } });
-
-    result.filter(e => delete e.password)
-    ApiRes('Found', HttpStatus.OK, {data: payload, count: total})
+    ApiRes('Found', HttpStatus.OK, {data: result, count: total})
   }
 
   async IsActiveProtcess (query: isActiveDto) {
@@ -213,31 +182,24 @@ export class AdminService {
 
   async AllUsers () {
     const find_user = await this.usersRepository.find({
-      select: ['id', 'first_name', 'last_name']
-    });
-    let payload = [];
-    for await (const iterator of find_user) {
-      const user_id: number = iterator['id'];
-      console.log(user_id)
-      const find_in_referal = await this.ReferalRepository.findOne({
-        
-          where: [
-          {
-            referal1_id: user_id
-          }, 
-          {
-            referal2_id: user_id
-          }
-        ]
-    });
-      
-      if(!find_in_referal){
-        payload.push(iterator)
+      relations: {
+        referals: {
+          referal_1: true,
+          referal_2: true
+        }
+      },
+      select: {
+        id: true,
+        first_name: true,
+        last_name: true,
+        isActive: true,
+        balance: true,
       }
-    }
-    if(payload.length == 0) {
+    });
+
+    if(find_user.length == 0) {
       ApiRes("Not Found Users", HttpStatus.NOT_FOUND);
     }
-    ApiRes('Successfuly', HttpStatus.OK, payload);   
+    ApiRes('Successfuly', HttpStatus.OK, find_user);   
   }
 }

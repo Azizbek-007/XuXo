@@ -80,7 +80,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Users.prototype, "isActive", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Referal_1.Referals, (referal) => referal.customer, { eager: true }),
+    (0, typeorm_1.OneToMany)(() => Referal_1.Referals, (referal) => referal.customer),
     __metadata("design:type", Array)
 ], Users.prototype, "referals", void 0);
 __decorate([

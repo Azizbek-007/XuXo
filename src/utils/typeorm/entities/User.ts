@@ -54,7 +54,7 @@ export class Users extends BaseEntity {
     })
     isActive: isActive;
 
-    @OneToMany(() => Referals, (referal) => referal.customer, { eager: true})
+    @OneToMany(() => Referals, (referal) => referal.customer)
     referals: Referals[]
 
     @CreateDateColumn() 
