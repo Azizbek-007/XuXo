@@ -240,15 +240,18 @@ let AdminService = class AdminService {
                 try {
                     const iterator = _c;
                     const user_id = iterator['id'];
-                    const find_in_referal = await this.ReferalRepository.findOneBy([
-                        {
-                            referal1_id: user_id
-                        },
-                        {
-                            referal2_id: user_id
-                        }
-                    ]);
-                    if (find_in_referal) {
+                    console.log(user_id);
+                    const find_in_referal = await this.ReferalRepository.findOne({
+                        where: [
+                            {
+                                referal1_id: user_id
+                            },
+                            {
+                                referal2_id: user_id
+                            }
+                        ]
+                    });
+                    if (!find_in_referal) {
                         payload.push(iterator);
                     }
                 }

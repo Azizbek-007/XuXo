@@ -29,7 +29,7 @@ let AdminController = class AdminController {
     allReferal(query) {
         return this.adminService.findAll(query);
     }
-    allUsers(query) {
+    allUsers() {
         return this.adminService.AllUsers();
     }
     createReferal(dto) {
@@ -54,9 +54,8 @@ __decorate([
 ], AdminController.prototype, "allReferal", null);
 __decorate([
     (0, common_1.Get)('users/all'),
-    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "allUsers", null);
 __decorate([
