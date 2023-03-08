@@ -106,7 +106,7 @@ export class UsersService {
         referal_1: true, 
         referal_2: true
       },
-      where: { id },
+      where: { customerId: id },
       select: {
         customer: {
           id: true,
