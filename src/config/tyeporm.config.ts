@@ -13,4 +13,4 @@ export const TypeOrmConfig: TypeOrmModuleOptions = {
   entities: entities,
   synchronize: true,
   logging: false
-};  
+};   
