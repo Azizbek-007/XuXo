@@ -188,6 +188,7 @@ export class AdminService {
           referal_2: true
         }
       },
+      where: { isActive: 1 },
       select: {
         id: true,
         first_name: true,
