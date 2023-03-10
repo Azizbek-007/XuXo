@@ -48,26 +48,8 @@ export class UsersService {
   }
 
   async Profile(user: Users['id']){
-    const data = await this.usersRepository.findOne({
-      where: {
-        id: user
-      },
-      select: [
-        'id', 
-        'first_name', 
-        'last_name',
-        'balance', 
-        'passport_number', 
-        'card_number',
-        'expiration_date',
-        'phone_number',
-        'pinfl',
-        'status',
-        'tree',
-        'created_at'
-      ]
-    });
-
+    const data = await this.usersRepository.findOneBy({ id: user });
+    delete data.password;
     ApiRes('Successfuly', HttpStatus.OK, data);
   }
 
