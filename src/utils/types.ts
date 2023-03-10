@@ -12,7 +12,8 @@ export type CreateUserDetails = {
     password: string;
     passport_number: string;
     phone_number: string;
-    pinfl: string
+    pinfl: string;
+    adress: string;
 };
 export type JwtPayload = { 
     id: number, 
