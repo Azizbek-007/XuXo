@@ -19,6 +19,9 @@ export class Users extends BaseEntity {
     @Column({ default: 0 })
     balance: number;
 
+    @Column()
+    adress: string;
+
     @Column({ unique: true })
     passport_number: string; 
     

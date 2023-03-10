@@ -36,7 +36,6 @@ export class UsersService {
     const newUser = this.usersRepository.create(params);
     let data = await this.usersRepository.save(newUser);
     delete data['password'];
-    console.log(data)
     ApiRes('Successfuly', HttpStatus.OK, data);
   }
 

@@ -24,6 +24,9 @@ export class CreateUserDto implements CreateUserDetails {
     phone_number: string;
 
     @IsString()
+    adress: string;
+
+    @IsString()
     @MinLength(14)
     @MaxLength(14)
     pinfl: string;
