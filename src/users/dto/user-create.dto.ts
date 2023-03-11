@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsPassportNumber, IsPhoneNumber, IsString, MaxLength, MinLength } from "class-validator";
+import { IsEmpty, IsNotEmpty, IsPassportNumber, IsPhoneNumber, IsString, MaxLength, MinLength } from "class-validator";
 import { CreateUserDetails } from "src/utils/types";
 
 export class CreateUserDto implements CreateUserDetails {
@@ -23,7 +23,7 @@ export class CreateUserDto implements CreateUserDetails {
     @IsPhoneNumber('UZ')
     phone_number: string;
 
-    @IsString()
+    @IsEmpty()
     adress: string;
 
     @IsString()
