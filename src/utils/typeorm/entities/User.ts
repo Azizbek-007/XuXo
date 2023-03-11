@@ -19,7 +19,7 @@ export class Users extends BaseEntity {
     @Column({ default: 0 })
     balance: number;
 
-    @Column()
+    @Column({ nullable: true })
     adress: string;
 
     @Column({ unique: true })
