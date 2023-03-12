@@ -33,12 +33,10 @@ export class AdminService {
     const ref_2 = ref_data?.referal2_id || null;
 
     if (ref_1) { 
-      console.log("ref1 ", ref_1)
       number --, this.c++ 
       await this.recursiv_binary_count(ref_1, number)    
     }
     if (ref_2) {
-      console.log("ref1 ", ref_1)
       number --, this.c++ 
       await this.recursiv_binary_count(ref_2, number)
     }
@@ -50,10 +48,11 @@ export class AdminService {
     if(user_data.status == UserStatus.level_3) return;
 
     await this.recursiv_binary_count(user, 33);
-    console.log("count ",this.c)
-    
+    console.log("binary count ",this.c)
+    console.log(user_data.status)
     if (user_data.status == null && (this.c >= 6 && this.c <= 24)) {
       // add balaance 250,000
+      console.log('added summa')
       await this.usersRepository.update(user_data.id, {
         balance: user_data.balance + 250000,
         status: UserStatus.level_1
@@ -79,7 +78,15 @@ export class AdminService {
     let cheking = await this.ReferalRepository.findOne({ 
       where: { 'customerId': dto.customerId }
     });
-    console.log(cheking)
+   
+    const ref_cheking = await this.ReferalRepository.findOneBy([
+      { referal1_id: dto['referal'] },
+      { referal2_id: dto['referal'] }
+    ]);
+
+    if(ref_cheking != null) {
+      ApiRes('Found this referal', HttpStatus.BAD_REQUEST)
+    }
 
     if(cheking == null) {
       console.log('created')
@@ -88,18 +95,19 @@ export class AdminService {
             referal1_id: dto.referal 
           });
       await new_user.save();
-      await this.add_balance(dto.customerId);
+      
       ApiRes('OK', HttpStatus.OK);    
     } 
     if (cheking !== null && cheking.referal2_id == null){
       if(cheking.referal1_id == dto.referal){
         ApiRes('Found this referal', HttpStatus.BAD_REQUEST)
       }
-      console.log('updated')
+
       await this.ReferalRepository.update(cheking.id, { 
         referal2_id: dto.referal  
       });
-      await this.add_balance(dto.customerId);
+
+
       ApiRes('OK', HttpStatus.OK) 
     }
 
@@ -132,7 +140,10 @@ export class AdminService {
       skip: skip
     });
 
-   
+    for await (const iterator of result) {
+      await this.add_balance(iterator['id']);
+    }
+
     let total = await this.usersRepository.count({ where: { isActive } });
     ApiRes('Found', HttpStatus.OK, {data: result, count: total})
   }

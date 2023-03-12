@@ -40,7 +40,7 @@ export class Users extends BaseEntity {
     @Column('simple-array', { nullable: true})
     tree: Number[];
 
-    @Column('enum', { enum: UserStatus, default:  UserStatus.level_1 })
+    @Column('enum', { enum: UserStatus, default: null })
     status: UserStatus; 
 
     @Column({

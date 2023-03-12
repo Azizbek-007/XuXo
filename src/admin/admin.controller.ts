@@ -27,6 +27,7 @@ export class AdminController {
 
   @Post('referal')
   createReferal(@Body() dto: CreateReferalDto): Promise<void> {
+    console.log('ok')
     return this.adminService.createReferal(dto);
   }
 
