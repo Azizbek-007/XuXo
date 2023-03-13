@@ -41,6 +41,11 @@ export class AdminController {
     return this.adminService.PaymetOrder(query);
   }
 
+  @Get('binary/:id')
+  async BinaryCount(@Param('id') id: number) {
+    return this.adminService.BinaryCount(id);
+  }
+
   @Patch('paymet/status')
   SetPaymetStatus(@Body() body: PaymetStatusDto): Promise<void> {
     return this.adminService.SetPaymetStatus(body);

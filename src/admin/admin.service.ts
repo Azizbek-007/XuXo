@@ -70,7 +70,6 @@ export class AdminService {
         status: UserStatus.level_3
       });
     }
-
     this.c = 0 
   }
   
@@ -162,6 +161,14 @@ export class AdminService {
     }else {
       ApiRes('enum values: 1, 0', HttpStatus.BAD_REQUEST);
     }
+  }
+
+  async BinaryCount(user: Users['id']) {
+    let u_count = 0;
+    await this.recursiv_binary_count(user, 33);
+    u_count += this.c;
+    this.c = 0
+    return { count: u_count};
   }
 
   async PaymetOrder(query: { take: number, page: number, customer_id: number, status: PaymetRole}) {
