@@ -57,13 +57,13 @@ export class AdminService {
         balance: user_data.balance + 250000,
         status: UserStatus.level_1
       }); 
-    } else if (user_data.status == UserStatus.level_1 && (this.c > 24)){
+    } else if (user_data.status == UserStatus.level_1 && (this.c > 30)){
       // add balaance 600,000
       await this.usersRepository.update(user_data.id, {
         balance: user_data.balance + 600000,
         status: UserStatus.level_2
       }); 
-    } else if (user_data.status == UserStatus.level_2 && this.c > 32){
+    } else if (user_data.status == UserStatus.level_2 && this.c > 62){
         // add balaance 1,000,000
         await this.usersRepository.update(user_data.id, {
         balance: user_data.balance + 1000000,
