@@ -50,14 +50,14 @@ export class AdminService {
     await this.recursiv_binary_count(user, 33);
     console.log("binary count ",this.c)
     console.log(user_data.status)
-    if (user_data.status == null && (this.c >= 6 && this.c <= 24)) {
+    if (user_data.status == null && (this.c >= 6)) {
       // add balaance 250,000
       console.log('added summa')
       await this.usersRepository.update(user_data.id, {
         balance: user_data.balance + 250000,
         status: UserStatus.level_1
       }); 
-    } else if (user_data.status == UserStatus.level_1 && (this.c > 24 && this.c <= 32)){
+    } else if (user_data.status == UserStatus.level_1 && (this.c > 24)){
       // add balaance 600,000
       await this.usersRepository.update(user_data.id, {
         balance: user_data.balance + 600000,
