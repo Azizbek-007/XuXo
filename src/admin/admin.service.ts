@@ -212,17 +212,10 @@ export class AdminService {
     let payload = [];
     for await (const iterator of find_user) {
       const user_id = iterator['id'];
-      console.log(user_id)
-      let data = await this.ReferalRepository.findOne({
-        where: [
-          { referal1_id: user_id },
-          { referal2_id: user_id }
-        ]
+      let data = await this.ReferalRepository.findOneBy({
+        referal1_id: user_id        
       });
-
-      return data
-
-      if(data == null){ 
+      if(data == null || data.created_at == null){ 
         payload.push(find_user);
       }
     }
