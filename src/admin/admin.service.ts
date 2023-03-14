@@ -232,6 +232,6 @@ export class AdminService {
     if(payload.length == 0) {
       ApiRes("Not Found Users", HttpStatus.NOT_FOUND);
     }
-    ApiRes('Successfuly', HttpStatus.OK, payload);   
+    ApiRes('Successfuly', HttpStatus.OK, ...payload);   
   }
 }
