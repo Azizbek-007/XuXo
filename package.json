@@ -21,6 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@jridgewell/sourcemap-codec": "^1.4.8",
     "@nestjs/common": "^9.3.9",
     "@nestjs/core": "^9.0.0",
     "@nestjs/jwt": "^10.0.2",
@@ -42,7 +43,6 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "4.4.0",
     "rxjs": "^7.8.0",
-    "@jridgewell/sourcemap-codec": "^1.4.8",
     "typeorm": "^0.3.12"
   },
   "devDependencies": {
@@ -54,6 +54,7 @@
     "@types/jest": "28.1.8",
     "@types/node": "^18.14.6",
     "@types/supertest": "^2.0.11",
+    "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "5.54.1",
     "@typescript-eslint/parser": "5.54.1",
     "eslint": "8.35.0",
@@ -71,7 +72,7 @@
   },
   "jest": {
     "moduleFileExtensions": [
-      "js", 
+      "js",
       "json",
       "ts"
     ],

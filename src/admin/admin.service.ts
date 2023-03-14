@@ -216,9 +216,22 @@ export class AdminService {
       }
     });
 
-    if(find_user.length == 0) {
+    let payload = [];
+    for await (const iterator of find_user) {
+      const user_id = iterator['id'];
+      let data = await this.ReferalRepository.findOneBy([
+        { referal1_id: user_id },
+        { referal2_id: user_id }
+      ]);
+
+      if(!data){
+        payload.push(find_user);
+      }
+    }
+
+    if(payload.length == 0) {
       ApiRes("Not Found Users", HttpStatus.NOT_FOUND);
     }
-    ApiRes('Successfuly', HttpStatus.OK, find_user);   
+    ApiRes('Successfuly', HttpStatus.OK, payload);   
   }
 }
