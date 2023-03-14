@@ -21,7 +21,7 @@ export class AdminController {
   }
 
   @Get('users/all')
-  allUsers(): Promise<void>{
+  allUsers(){
     return this.adminService.AllUsers();
   }
 
