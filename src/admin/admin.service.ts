@@ -25,7 +25,7 @@ export class AdminService {
 
 
   async recursiv_binary_count (user: Users['id'], number){
-    
+    let c =0;
     // referal data
     let ref_data = await this.ReferalRepository.findOneBy({ customerId: user })
 
@@ -50,7 +50,7 @@ export class AdminService {
     await this.recursiv_binary_count(user, 33);
     console.log("binary count ",this.c)
     console.log(user_data.status)
-    if (user_data.status == null && (this.c >= 6)) {
+    if (user_data.status == null && (this.c >= 6)) { 
       // add balaance 250,000
       console.log('added summa')
       await this.usersRepository.update(user_data.id, {
@@ -213,10 +213,12 @@ export class AdminService {
     for await (const iterator of find_user) {
       const user_id = iterator['id'];
       console.log(user_id)
-      let data = await this.ReferalRepository.findOneBy([
-        { referal1_id: user_id },
-        { referal2_id: user_id }
-      ]);
+      let data = await this.ReferalRepository.findOne({
+        where: [
+          { referal1_id: user_id },
+          { referal2_id: user_id }
+        ]
+      });
 
       if(data == null){ 
         payload.push(find_user);
