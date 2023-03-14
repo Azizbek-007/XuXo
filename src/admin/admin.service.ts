@@ -220,6 +220,8 @@ export class AdminService {
         ]
       });
 
+      return data
+
       if(data == null){ 
         payload.push(find_user);
       }
