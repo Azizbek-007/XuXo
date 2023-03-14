@@ -215,7 +215,8 @@ export class AdminService {
       const data = await this.ReferalRepository.findOneBy([
         { referal1_id: user_id },
         { referal2_id: user_id }
-      ]) ?? null;
+      ]);
+      console.log(data)
       if(data == null){ 
         payload.push(iterator);
       }
@@ -224,6 +225,6 @@ export class AdminService {
     if(payload.length == 0) {
       ApiRes("Not Found Users", HttpStatus.NOT_FOUND);
     }
-    ApiRes('Successfuly', HttpStatus.OK, ...payload);   
+    ApiRes('Successfuly', HttpStatus.OK, payload);   
   }
 }
