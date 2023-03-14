@@ -200,12 +200,6 @@ export class AdminService {
 
   async AllUsers () {
     const find_user = await this.usersRepository.find({
-      relations: {
-        referals: {
-          referal_1: true,
-          referal_2: true
-        }
-      },
       where: { isActive: 1 },
       select: {
         id: true,
@@ -215,16 +209,16 @@ export class AdminService {
         balance: true,
       }
     });
-
     let payload = [];
     for await (const iterator of find_user) {
       const user_id = iterator['id'];
+      console.log(user_id)
       let data = await this.ReferalRepository.findOneBy([
         { referal1_id: user_id },
         { referal2_id: user_id }
       ]);
 
-      if(!data){
+      if(data == null){ 
         payload.push(find_user);
       }
     }
